@@ -1509,7 +1509,7 @@ export default class Drawflow {
       } else {
         //Vue 2
         let wrapper = new this.render({
-          render: h => h(this.noderegister[dataNode.html].html, { props: this.noderegister[dataNode.html].props }),
+          render: h => h(this.noderegister[dataNode.html].html, { props: dataNode.data }),
           ...this.noderegister[dataNode.html].options
         }).$mount()
         content.appendChild(wrapper.$el);
