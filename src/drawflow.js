@@ -1981,8 +1981,8 @@ export default class Drawflow {
 		this.canvas_y = 0;
 		this.zoom = 1;
 		this.zoom_last_value = 1;
-		this.precanvas.style.transform = '';
 	}
+	this.precanvas.style.transform = '';
     this.import(this.drawflow);
   }
 
