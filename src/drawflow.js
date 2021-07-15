@@ -1968,18 +1968,20 @@ export default class Drawflow {
     this.drawflow.drawflow[name] =  { "data": {} };
     this.dispatch('moduleCreated', name);
   }
-  changeModule(name) {
+  changeModule(name, update) {
     this.dispatch('moduleChanged', name);
     this.module = name;
     this.precanvas.innerHTML = "";
-    this.canvas_x = 0;
-    this.canvas_y = 0;
     this.pos_x = 0;
     this.pos_y = 0;
     this.mouse_x = 0;
     this.mouse_y = 0;
-    this.zoom = 1;
-    this.zoom_last_value = 1;
+	if (!update) {
+		this.canvas_x = 0;
+		this.canvas_y = 0;
+		this.zoom = 1;
+		this.zoom_last_value = 1;
+	}
     this.precanvas.style.transform = '';
     this.import(this.drawflow);
   }
