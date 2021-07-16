@@ -1972,10 +1972,12 @@ export default class Drawflow {
     this.dispatch('moduleChanged', name);
     this.module = name;
 	this.precanvas.innerHTML = "";
-	this.canvas_x = 0;
-	this.canvas_y = 0;
-    this.pos_x = 0;
-    this.pos_y = 0;
+    if (!update) {
+      this.canvas_x = 0;
+      this.canvas_y = 0;
+      this.pos_x = 0;
+      this.pos_y = 0;      
+    }
     this.mouse_x = 0;
     this.mouse_y = 0;
 	this.zoom = 1;
