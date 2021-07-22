@@ -18,6 +18,7 @@ export default class Drawflow {
     this.connection = false;
     this.connection_ele = null;
     this.connection_selected = null;
+    this.connection_prop = false;
     this.canvas_x = 0;
     this.canvas_y = 0;
     this.pos_x = 0;
@@ -202,6 +203,7 @@ export default class Drawflow {
         this.ele_selected = e.target.closest(".drawflow_content_node").parentElement;
       }
     }
+    
     switch (this.ele_selected.classList[0]) {
       case 'drawflow-node':
         if(this.node_selected != null) {
@@ -783,6 +785,7 @@ export default class Drawflow {
         var elemtsearchId_out = container.querySelector(`#${id}`);
 
         var id_search = elemsOut[item].classList[1].replace('node_in_', '');
+
         var elemtsearchId = container.querySelector(`#${id_search}`);
 
         var elemtsearch = elemtsearchId.querySelectorAll('.'+elemsOut[item].classList[4])[0]
@@ -973,8 +976,8 @@ export default class Drawflow {
     })
 
     const elems = container.querySelectorAll(`.${idSearch}`);
+    
     Object.keys(elems).map(function(item, index) {
-      // console.log("In")
       if(elems[item].querySelector('.point') === null) {
         var elemtsearchId_in = container.querySelector(`#${id}`);
 
@@ -1174,10 +1177,17 @@ export default class Drawflow {
     if(this.connection_selected != null && this.reroute) {
         this.createReroutePoint(this.connection_selected);
     }
+    if(this.connection_selected != null && !this.reroute) {
+        this.openPropRoute(this.connection_selected);
+    }
 
     if(e.target.classList[0] === 'point') {
         this.removeReroutePoint(e.target);
     }
+  }
+
+  openPropRoute(ele) {
+    this.connection_prop = ele.parentElement.dataset.id;
   }
 
   createReroutePoint(ele) {
@@ -1477,6 +1487,7 @@ export default class Drawflow {
         connection.classList.add("node_out_node-"+dataNode.inputs[input_item].connections[output_item].node);
         connection.classList.add(dataNode.inputs[input_item].connections[output_item].input);
         connection.classList.add(input_item);
+        connection.dataset.id = dataNode.inputs[input_item].connections[output_item].id; //new DG code
 
         connection.appendChild(path);
         precanvas.appendChild(connection);
