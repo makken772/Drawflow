@@ -18,7 +18,10 @@ export default class Drawflow {
     this.connection = false;
     this.connection_ele = null;
     this.connection_selected = null;
+    this.connection_add = false;
     this.connection_prop = false;
+    this.connection_delete = false;
+    this.node_delete = false;
     this.canvas_x = 0;
     this.canvas_y = 0;
     this.pos_x = 0;
@@ -459,7 +462,6 @@ export default class Drawflow {
       this.editor_selected = false;
     }
     if(this.connection === true) {
-      //console.log(ele_last)
       if(ele_last.classList[0] === 'input' || (this.force_first_input && (ele_last.closest(".drawflow_content_node") != null || ele_last.classList[0] === 'drawflow-node'))) {
 
         if(this.force_first_input && (ele_last.closest(".drawflow_content_node") != null || ele_last.classList[0] === 'drawflow-node')) {
@@ -492,8 +494,23 @@ export default class Drawflow {
           this.connection_ele.classList.add("node_out_"+output_id);
           this.connection_ele.classList.add(output_class);
           this.connection_ele.classList.add(input_class);
+          this.connection_ele.dataset.id = "new_route" + e_pos_x; //new DG code
           var id_input = input_id.slice(5);
           var id_output = output_id.slice(5);
+
+          this.connection_add = {
+            data: {
+              name: "",
+              type: "default",
+            },
+            edge_type: "default",
+            id: "new_route" + e_pos_x,
+            label: "",
+            oid: "",
+            source_node: this.drawflow.drawflow[this.module].data[id_output].data.id,
+            target_node: this.drawflow.drawflow[this.module].data[id_input].data.id,
+            type: "route"
+          };
 
           this.drawflow.drawflow[this.module].data[id_output].outputs[output_class].connections.push( {"node": id_input, "output": input_class});
           this.drawflow.drawflow[this.module].data[id_input].inputs[input_class].connections.push( {"node": id_output, "input": output_class});
@@ -788,7 +805,7 @@ export default class Drawflow {
 
         var elemtsearchId = container.querySelector(`#${id_search}`);
 
-        var elemtsearch = elemtsearchId.querySelectorAll('.'+elemsOut[item].classList[4])[0]
+        var elemtsearch = elemtsearchId.querySelectorAll('.'+elemsOut[item].classList[4])[0];
 
         /*var eX = elemtsearch.offsetWidth/2 + line_path + elemtsearch.parentElement.parentElement.offsetLeft + elemtsearch.offsetLeft;
         var eY = elemtsearch.offsetHeight/2 + line_path + elemtsearch.parentElement.parentElement.offsetTop + elemtsearch.offsetTop;*/
@@ -983,7 +1000,7 @@ export default class Drawflow {
 
         var id_search = elems[item].classList[2].replace('node_out_', '');
         var elemtsearchId = container.querySelector(`#${id_search}`);
-        var elemtsearch = elemtsearchId.querySelectorAll('.'+elems[item].classList[3])[0]
+        var elemtsearch = elemtsearchId.querySelectorAll('.'+elems[item].classList[3])[0];
 
         /*var line_x = elemtsearch.offsetWidth/2 + line_path + elemtsearch.parentElement.parentElement.offsetLeft + elemtsearch.offsetLeft;
         var line_y = elemtsearch.offsetHeight/2 + line_path + elemtsearch.parentElement.parentElement.offsetTop + elemtsearch.offsetTop;*/
@@ -1187,7 +1204,11 @@ export default class Drawflow {
   }
 
   openPropRoute(ele) {
-    this.connection_prop = ele.parentElement.dataset.id;
+    if (ele.parentElement.dataset.id) {
+      this.connection_prop = ele.parentElement.dataset.id;
+    } else {
+      this.connection_prop = 'new';
+    }
   }
 
   createReroutePoint(ele) {
@@ -1386,8 +1407,9 @@ export default class Drawflow {
         }).mount(content)
       } else {
         // Vue 2
+        this.noderegister[html].props.data = data;
         let wrapper = new this.render({
-          render: h => h(this.noderegister[html].html, { props: this.noderegister[html].props }),
+          render: h => h(this.noderegister[html].html, { props: this.noderegister[html].props }), // this.noderegister[html].props 
           ...this.noderegister[html].options
         }).$mount()
         //
@@ -1857,6 +1879,7 @@ export default class Drawflow {
     if(this.module === moduleName) {
       this.container.querySelector(`#${id}`).remove();
     }
+    this.node_delete = this.drawflow.drawflow[moduleName].data[id.slice(5)].data.id;
     delete this.drawflow.drawflow[moduleName].data[id.slice(5)];
     this.dispatch('nodeRemoved', id.slice(5));
   }
@@ -1864,12 +1887,15 @@ export default class Drawflow {
   removeConnection() {
     if(this.connection_selected != null) {
       var listclass = this.connection_selected.parentElement.classList;
+      let step_in;
       this.connection_selected.parentElement.remove();
       //console.log(listclass);
       var index_out = this.drawflow.drawflow[this.module].data[listclass[2].slice(14)].outputs[listclass[3]].connections.findIndex(function(item,i) {
+        step_in = item.node;
         return item.node === listclass[1].slice(13) && item.output === listclass[4]
       });
       this.drawflow.drawflow[this.module].data[listclass[2].slice(14)].outputs[listclass[3]].connections.splice(index_out,1);
+      this.connection_delete = step_in;
 
       var index_in = this.drawflow.drawflow[this.module].data[listclass[1].slice(13)].inputs[listclass[4]].connections.findIndex(function(item,i) {
         return item.node === listclass[2].slice(14) && item.input === listclass[3]
@@ -1919,6 +1945,8 @@ export default class Drawflow {
   }
 
   removeConnectionNodeId(id) {
+    // console.log('removeConnectionNodeId', id);
+    // this.connection_delete = id;
     const idSearchIn = 'node_in_'+id;
     const idSearchOut = 'node_out_'+id;
 
