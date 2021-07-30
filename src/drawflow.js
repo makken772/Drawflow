@@ -1510,7 +1510,10 @@ export default class Drawflow {
         connection.classList.add(dataNode.inputs[input_item].connections[output_item].input);
         connection.classList.add(input_item);
         connection.dataset.id = dataNode.inputs[input_item].connections[output_item].id; //new DG code
-
+        if (dataNode.inputs[input_item].connections[output_item].data.type === 'different') { //new DG code
+          connection.classList.add('different');
+        }
+        
         connection.appendChild(path);
         precanvas.appendChild(connection);
 
