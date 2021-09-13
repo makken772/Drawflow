@@ -496,12 +496,12 @@ export default class Drawflow {
   
             if(this.container.querySelectorAll('.connection.node_in_'+input_id+'.node_out_'+output_id+'.'+output_class+'.'+input_class).length === 0) {
             // Conection no exist save connection
-  
+			var routeID = this.getUuid();
             this.connection_ele.classList.add("node_in_"+input_id);
             this.connection_ele.classList.add("node_out_"+output_id);
             this.connection_ele.classList.add(output_class);
             this.connection_ele.classList.add(input_class);
-            this.connection_ele.dataset.id = this.getUuid(); //new DG code
+            this.connection_ele.dataset.id = routeID; //new DG code
             var id_input = input_id.slice(5);
             var id_output = output_id.slice(5);
   
@@ -511,7 +511,7 @@ export default class Drawflow {
                 type: "default",
               },
               edge_type: "default",
-              id: this.getUuid(),
+              id: routeID,
               label: "",
               oid: "",
               source_node: this.drawflow.drawflow[this.module].data[id_output].data.id,
