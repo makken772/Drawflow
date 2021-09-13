@@ -501,7 +501,7 @@ export default class Drawflow {
             this.connection_ele.classList.add("node_out_"+output_id);
             this.connection_ele.classList.add(output_class);
             this.connection_ele.classList.add(input_class);
-            this.connection_ele.dataset.id = "new_route" + e_pos_x; //new DG code
+            this.connection_ele.dataset.id = getUuid(); //new DG code
             var id_input = input_id.slice(5);
             var id_output = output_id.slice(5);
   
@@ -511,7 +511,7 @@ export default class Drawflow {
                 type: "default",
               },
               edge_type: "default",
-              id: "new_route" + e_pos_x,
+              id: getUuid(),
               label: "",
               oid: "",
               source_node: this.drawflow.drawflow[this.module].data[id_output].data.id,
