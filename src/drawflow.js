@@ -347,9 +347,6 @@ export default class Drawflow {
         var e_pos_y = e.clientY;
       }
   
-	  console.log('position e', e);
-	  console.log('position this', this);
-  
       if(this.connection) {
         this.updateConnection(e_pos_x, e_pos_y);
       }
@@ -376,13 +373,7 @@ export default class Drawflow {
   
         this.drawflow.drawflow[this.module].data[this.ele_selected.id.slice(5)].pos_x = (this.ele_selected.offsetLeft - x);
         this.drawflow.drawflow[this.module].data[this.ele_selected.id.slice(5)].pos_y = (this.ele_selected.offsetTop - y);
-        
-        this.node_position = {
-            id: this.drawflow.drawflow[this.module].data[this.ele_selected.id.slice(5)].data.id,
-            y: (this.ele_selected.offsetTop - y),
-            x: (this.ele_selected.offsetLeft - x),
-        };
-  
+          
         this.updateConnectionNodes(this.ele_selected.id)
       }
   
@@ -457,6 +448,13 @@ export default class Drawflow {
   
 	  console.log('dragEnd e', e);
 	  console.log('dragEnd this', this);
+      if(!this.node_position) {
+        this.node_position = {
+            id: this.drawflow.drawflow[this.module].data[this.ele_selected.id.slice(5)].data.id,
+            y: (this.ele_selected.offsetTop - y),
+            x: (this.ele_selected.offsetLeft - x),
+        };
+      }
 	  
       if(this.drag) {
         if(this.pos_x_start != e_pos_x || this.pos_y_start != e_pos_y) {
