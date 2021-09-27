@@ -445,12 +445,8 @@ export default class Drawflow {
         var e_pos_y = e.clientY;
         var ele_last = e.target;
       }
-  
-	  console.log('dragEnd e', e);
-	  console.log('dragEnd this', this);
 	  
       if(this.drag) {
-		console.log('dragEnd drag', this.ele_selected.id);
         if(this.pos_x_start != e_pos_x || this.pos_y_start != e_pos_y) {
           this.dispatch('nodeMoved', this.ele_selected.id.slice(5));
         }
