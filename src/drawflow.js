@@ -347,6 +347,8 @@ export default class Drawflow {
         var e_pos_y = e.clientY;
       }
   
+	  console.log('position e', e);
+	  console.log('position this', this);
   
       if(this.connection) {
         this.updateConnection(e_pos_x, e_pos_y);
@@ -453,6 +455,9 @@ export default class Drawflow {
         var ele_last = e.target;
       }
   
+	  console.log('dragEnd e', e);
+	  console.log('dragEnd this', this);
+	  
       if(this.drag) {
         if(this.pos_x_start != e_pos_x || this.pos_y_start != e_pos_y) {
           this.dispatch('nodeMoved', this.ele_selected.id.slice(5));
