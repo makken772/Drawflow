@@ -449,6 +449,8 @@ export default class Drawflow {
 	  console.log('dragEnd e', e);
 	  console.log('dragEnd this', this);
       if(!this.node_position) {
+        var x = (this.pos_x - e_pos_x) * this.precanvas.clientWidth / (this.precanvas.clientWidth * this.zoom);
+        var y = (this.pos_y - e_pos_y) * this.precanvas.clientHeight / (this.precanvas.clientHeight * this.zoom);
         this.node_position = {
             id: this.drawflow.drawflow[this.module].data[this.ele_selected.id.slice(5)].data.id,
             y: (this.ele_selected.offsetTop - y),
@@ -457,6 +459,7 @@ export default class Drawflow {
       }
 	  
       if(this.drag) {
+		console.log('dragEnd drag', this.ele_selected);
         if(this.pos_x_start != e_pos_x || this.pos_y_start != e_pos_y) {
           this.dispatch('nodeMoved', this.ele_selected.id.slice(5));
         }
